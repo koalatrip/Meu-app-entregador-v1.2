@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ENTREGADOR PRO v4</title>
+    <title>ENTREGADOR PRO FINAL</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -17,32 +17,26 @@
         .header { background: var(--primary); color: white; padding: 50px 20px 20px; text-align: center; font-weight: bold; letter-spacing: 2px; position: sticky; top: 0; z-index: 10; }
         .content { padding: 20px; padding-bottom: 110px; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
-        .card-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--primary); text-transform: uppercase; }
+        .card-title { font-size: 15px; font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--primary); text-transform: uppercase; }
         .input { width: 100%; padding: 15px; margin-bottom: 12px; border: none; background: #f1f3f5; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
         .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; }
         .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--danger); color: white; margin-top: 10px; }
+        .btn-danger { background: var(--danger); color: white; }
         .btn-accent { background: var(--accent); color: white; }
-        
-        /* Filtros */
         .filter-bar { display: flex; gap: 8px; margin-bottom: 15px; }
-        .btn-filter { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #ddd; background: white; font-size: 12px; font-weight: bold; color: #7f8c8d; }
+        .btn-filter { flex: 1; padding: 10px; border-radius: 10px; border: 1px solid #ddd; background: white; font-size: 11px; font-weight: bold; color: #7f8c8d; }
         .filter-active { background: var(--primary); color: white; border-color: var(--primary); }
-
-        .progress-wrapper { background: rgba(255,255,255,0.1); height: 10px; border-radius: 5px; margin-top: 10px; overflow: hidden; }
-        .progress-fill { background: var(--success); height: 100%; transition: width 0.3s ease; }
-        
-        .status-box { padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0; font-weight: bold; border: 1px solid transparent; }
-        
+        .status-box { padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0; font-weight: bold; border: 2px solid transparent; }
         .tab-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom); }
         .tab-item { flex: 1; display: flex; align-items: center; justify-content: center; border: none; background: none; color: #bdc3c7; font-weight: bold; font-size: 12px; }
         .tab-active { color: var(--primary); border-top: 3px solid var(--primary); }
-        
-        .history-item { background: white; padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-left: 5px solid #ddd; position: relative; }
-        .finish-divider { background: #e0e0e0; color: #7f8c8d; text-align: center; font-size: 10px; font-weight: bold; padding: 5px; border-radius: 8px; margin: 15px 0; text-transform: uppercase; letter-spacing: 1px; border: 1px dashed #ccc; }
-        
+        .history-item { background: white; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-left: 5px solid #ddd; }
+        .item-actions { display: flex; gap: 5px; }
+        .btn-icon { background: #f1f3f5; border: none; font-size: 14px; cursor: pointer; padding: 8px; border-radius: 8px; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; text-align: center; }
         .badge { font-size: 9px; padding: 3px 7px; border-radius: 5px; color: white; margin-top: 4px; display: inline-block; font-weight: bold; }
-        small { color: #7f8c8d; font-size: 11px; }
+        .turn-summary { background: #f8f9fa; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 8px; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -57,51 +51,37 @@
             const [km, setKm] = useState('');
             const [extraLabel, setExtraLabel] = useState('');
             const [extraValue, setExtraValue] = useState('');
-            
             const [history, setHistory] = useState([]);
+            const [turnHistory, setTurnHistory] = useState([]);
+            const [editId, setEditId] = useState(null);
+            const [showModal, setShowModal] = useState(false);
+            const [lastSummary, setLastSummary] = useState(null);
+            const [showArchive, setShowArchive] = useState(false);
+
             const [totalGoal, setTotalGoal] = useState('10000');
-            const [dailyGoal, setDailyGoal] = useState('300');
             const [kmLitro, setKmLitro] = useState('10'); 
             const [gasPrice, setGasPrice] = useState('5.80'); 
 
             useEffect(() => {
-                const saved = localStorage.getItem('@entregador_v4_data');
+                const saved = localStorage.getItem('@entregador_final_v1');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     setHistory(parsed.history || []);
+                    setTurnHistory(parsed.turnHistory || []);
                     setTotalGoal(parsed.totalGoal || '10000');
-                    setDailyGoal(parsed.dailyGoal || '300');
                     setKmLitro(parsed.kmLitro || '10');
                     setGasPrice(parsed.gasPrice || '5.80');
                 }
             }, []);
 
             useEffect(() => {
-                localStorage.setItem('@entregador_v4_data', JSON.stringify({ history, totalGoal, dailyGoal, kmLitro, gasPrice }));
-            }, [history, totalGoal, dailyGoal, kmLitro, gasPrice]);
+                localStorage.setItem('@entregador_final_v1', JSON.stringify({ history, turnHistory, totalGoal, kmLitro, gasPrice }));
+            }, [history, turnHistory, totalGoal, kmLitro, gasPrice]);
 
-            const currentRate = (parseFloat(price) / parseFloat(km)) || 0;
-            const fuelCostKm = parseFloat(gasPrice) / parseFloat(kmLitro);
-            const rideNetProfit = (parseFloat(price) - (parseFloat(km) * fuelCostKm)) || 0;
-
-            const totalNetAllTime = history.reduce((acc, curr) => acc + (curr.net || 0), 0);
-            
-            // Lógica de Filtro
             const todayStr = new Date().toLocaleDateString();
-            const thisMonth = new Date().getMonth();
-            const thisYear = new Date().getFullYear();
-
-            const filteredHistory = history.filter(item => {
-                if (filter === 'HOJE') return item.date === todayStr;
-                if (filter === 'MES') {
-                    const [d, m, y] = item.date.split('/');
-                    return (parseInt(m) - 1) === thisMonth && parseInt(y) === thisYear;
-                }
-                return true; // TUDO
-            });
-
-            const earnedInFilter = filteredHistory.reduce((acc, curr) => acc + (curr.net || 0), 0);
-            const progressVal = filter === 'HOJE' ? (earnedInFilter / parseFloat(dailyGoal)) * 100 : (totalNetAllTime / parseFloat(totalGoal)) * 100;
+            const fuelCostKm = parseFloat(gasPrice) / parseFloat(kmLitro);
+            const currentRate = (parseFloat(price) / parseFloat(km)) || 0;
+            const currentNet = (parseFloat(price) - (parseFloat(km) * fuelCostKm)) || 0;
 
             const getQuality = (rate) => {
                 if (rate >= 1.8) return { label: 'BOA', color: '#2ecc71' };
@@ -110,137 +90,161 @@
             };
 
             const addRide = () => {
-                const ride = { 
-                    id: Date.now(), price: parseFloat(price), net: rideNetProfit, km: parseFloat(km), 
-                    rate: currentRate, type: 'CORRIDA', date: todayStr,
-                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
-                };
+                const ride = { id: Date.now(), price: parseFloat(price), net: currentNet, km: parseFloat(km), rate: currentRate, type: 'CORRIDA', date: todayStr, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
                 setHistory([ride, ...history]);
                 setPrice(''); setKm('');
             };
 
-            const addExtra = (isGain) => {
+            const saveExtra = (isGain) => {
                 const val = parseFloat(extraValue) * (isGain ? 1 : -1);
-                const extra = {
-                    id: Date.now(), price: val, net: val, label: extraLabel || (isGain ? 'Extra' : 'Gasto'),
-                    type: 'EXTRA', date: todayStr, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-                };
-                setHistory([extra, ...history]);
+                if (editId) {
+                    setHistory(history.map(item => item.id === editId ? {...item, net: val, label: extraLabel} : item));
+                    setEditId(null);
+                } else {
+                    const extra = { id: Date.now(), net: val, label: extraLabel || (isGain ? 'Extra' : 'Gasto'), type: 'EXTRA', date: todayStr, time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) };
+                    setHistory([extra, ...history]);
+                }
                 setExtraLabel(''); setExtraValue('');
             };
 
             const finishTurn = () => {
-                if(confirm("Deseja finalizar o turno atual?")) {
-                    const marker = {
-                        id: Date.now(),
-                        type: 'MARKER',
-                        label: 'TURNO FINALIZADO',
-                        date: todayStr,
-                        time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
-                        net: 0
-                    };
-                    setHistory([marker, ...history]);
-                    setTab('META');
-                }
+                // Pega tudo desde o último marcador de turno
+                const lastMarkerIndex = history.findIndex(h => h.type === 'MARKER');
+                const itemsThisTurn = lastMarkerIndex === -1 ? history : history.slice(0, lastMarkerIndex);
+                
+                if (itemsThisTurn.length === 0) return alert("Nenhum lançamento para finalizar.");
+
+                const kmTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.km || 0), 0);
+                const grossTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.type === 'CORRIDA' ? curr.price : (curr.net > 0 ? curr.net : 0)), 0);
+                const fuelTotal = kmTotal * fuelCostKm;
+                const extrasTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.type === 'EXTRA' && curr.net < 0 ? curr.net : 0), 0);
+                const netTotal = itemsThisTurn.reduce((acc, curr) => acc + curr.net, 0);
+
+                const summary = { id: Date.now(), date: todayStr, time: new Date().toLocaleTimeString(), km: kmTotal, fuel: fuelTotal, net: netTotal, gross: grossTotal };
+                
+                setLastSummary(summary);
+                setTurnHistory([summary, ...turnHistory]);
+                setHistory([{ id: Date.now(), type: 'MARKER', label: 'TURNO FINALIZADO', date: todayStr, time: summary.time, net: 0 }, ...history]);
+                setShowModal(true);
             };
+
+            const filteredHistory = history.filter(item => {
+                if (filter === 'HOJE') return item.date === todayStr;
+                if (filter === 'MES') return item.date.split('/')[1] === todayStr.split('/')[1];
+                return true;
+            });
 
             return (
                 <div>
-                    <div className="header">ENTREGADOR PRO v4</div>
+                    <div className="header">ENTREGADOR PRO</div>
+                    
                     <div className="content">
                         {tab === 'CALC' && (
                             <div>
                                 <div className="card">
-                                    <div className="card-title">Analisar Corrida</div>
+                                    <div className="card-title">Análise de Corrida</div>
                                     <input className="input" type="number" placeholder="Valor (R$)" value={price} onChange={e => setPrice(e.target.value)} />
-                                    <input className="input" type="number" placeholder="Distância (KM)" value={km} onChange={e => setKm(e.target.value)} />
+                                    <input className="input" type="number" placeholder="KM Total" value={km} onChange={e => setKm(e.target.value)} />
                                     {currentRate > 0 && (
-                                        <div className="status-box" style={{ background: '#fff', border: `2px solid ${getQuality(currentRate).color}` }}>
+                                        <div className="status-box" style={{ borderColor: getQuality(currentRate).color }}>
                                             <span style={{color: getQuality(currentRate).color}}>CORRIDA {getQuality(currentRate).label}</span>
-                                            <br/><small>R$ {currentRate.toFixed(2)}/km | Lucro: R$ {rideNetProfit.toFixed(2)}</small>
+                                            <br/><small>R$ {currentRate.toFixed(2)}/km | Lucro: R$ {currentNet.toFixed(2)}</small>
                                         </div>
                                     )}
                                     {parseFloat(price) > 0 && <button className="btn btn-success" onClick={addRide}>LANÇAR CORRIDA</button>}
                                 </div>
                                 <div className="card">
-                                    <div className="card-title">Extra / Gasto</div>
+                                    <div className="card-title">{editId ? 'Editar Extra' : 'Extra / Gasto'}</div>
                                     <input className="input" placeholder="Descrição" value={extraLabel} onChange={e => setExtraLabel(e.target.value)} />
                                     <input className="input" type="number" placeholder="Valor (R$)" value={extraValue} onChange={e => setExtraValue(e.target.value)} />
                                     <div style={{display:'flex', gap:'10px'}}>
-                                        <button className="btn btn-accent" style={{flex:1}} onClick={() => addExtra(true)}>+ RECEBI</button>
-                                        <button className="btn btn-danger" style={{flex:1, marginTop:0}} onClick={() => addExtra(false)}>- GASTEI</button>
+                                        <button className="btn btn-accent" style={{flex:1}} onClick={() => saveExtra(true)}>{editId ? 'SALVAR' : 'RECEBI'}</button>
+                                        {!editId && <button className="btn btn-danger" style={{flex:1}} onClick={() => saveExtra(false)}>GASTEI</button>}
                                     </div>
                                 </div>
-                                <button className="btn" style={{background: '#34495e', color: 'white'}} onClick={finishTurn}>🏁 FINALIZAR TURNO</button>
+                                <button className="btn" style={{background: '#2c3e50', color: 'white'}} onClick={finishTurn}>🏁 FINALIZAR TURNO / VER RESUMO</button>
                             </div>
                         )}
 
                         {tab === 'META' && (
                             <div>
                                 <div className="filter-bar">
-                                    <button className={`btn-filter ${filter === 'HOJE' ? 'filter-active' : ''}`} onClick={() => setFilter('HOJE')}>HOJE</button>
-                                    <button className={`btn-filter ${filter === 'MES' ? 'filter-active' : ''}`} onClick={() => setFilter('MES')}>MÊS</button>
-                                    <button className={`btn-filter ${filter === 'TUDO' ? 'filter-active' : ''}`} onClick={() => setFilter('TUDO')}>TOTAL</button>
+                                    {['HOJE', 'MES', 'TUDO'].map(f => <button key={f} className={`btn-filter ${filter === f ? 'filter-active' : ''}`} onClick={() => {setFilter(f); setShowArchive(false)}}>{f}</button>)}
+                                    <button className={`btn-filter ${showArchive ? 'filter-active' : ''}`} onClick={() => setShowArchive(true)}>TURNOS</button>
                                 </div>
 
-                                <div className="card" style={{background: '#2c3e50', color: 'white', border: 'none'}}>
-                                    <div style={{textAlign:'center'}}>
-                                        <small style={{color:'#bdc3c7'}}>{filter === 'TUDO' ? 'LUCRO TOTAL ACUMULADO' : `LUCRO ${filter}`}</small><br/>
-                                        <b style={{color: 'var(--success)', fontSize: '28px'}}>R$ {earnedInFilter.toFixed(2)}</b>
-                                        <div className="progress-wrapper">
-                                            <div className="progress-fill" style={{width: `${Math.min(progressVal, 100)}%`}}></div>
-                                        </div>
-                                        <small style={{display:'block', marginTop: '10px'}}>
-                                            {filter === 'HOJE' ? `Meta do Dia: R$ ${dailyGoal}` : `Meta do Plano: R$ ${totalGoal}`}
-                                        </small>
-                                    </div>
-                                </div>
-
-                                <h3 style={{fontSize: '12px', color: '#7f8c8d', margin: '20px 0 10px'}}>RESUMO DO PERÍODO</h3>
-                                {filteredHistory.length === 0 && <p style={{textAlign:'center', color:'#bdc3c7'}}>Nenhum registro neste filtro.</p>}
-                                
-                                {filteredHistory.map(item => (
-                                    item.type === 'MARKER' ? (
-                                        <div key={item.id} className="finish-divider">
-                                            🏁 {item.label} - {item.time} ({item.date})
-                                        </div>
-                                    ) : (
-                                        <div key={item.id} className="history-item" style={{borderLeftColor: item.type === 'EXTRA' ? (item.net > 0 ? '#2ecc71' : '#e74c3c') : getQuality(item.rate).color}}>
-                                            <div>
-                                                <small>{item.date} às {item.time}</small><br/>
-                                                <b>{item.type === 'CORRIDA' ? `${item.km} km` : item.label}</b><br/>
-                                                {item.type === 'CORRIDA' && <span className="badge" style={{background: getQuality(item.rate).color}}>{getQuality(item.rate).label}</span>}
+                                {showArchive ? (
+                                    <div>
+                                        <div className="card-title">Resumos de Turnos Finalizados</div>
+                                        {turnHistory.map(t => (
+                                            <div key={t.id} className="turn-summary">
+                                                <b>{t.date} às {t.time.split(' ')[0]}</b><br/>
+                                                Distância: {t.km}km | Gasto Gasolina: R$ {t.fuel.toFixed(2)}<br/>
+                                                <span style={{color: 'var(--success)', fontWeight:'bold'}}>LUCRO LÍQUIDO: R$ {t.net.toFixed(2)}</span>
                                             </div>
-                                            <b style={{color: item.net >= 0 ? 'var(--success)' : 'var(--danger)'}}>{item.net >= 0 ? '+' : ''} R$ {Math.abs(item.net).toFixed(2)}</b>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <div className="card" style={{background: '#2c3e50', color: 'white', border: 'none', textAlign: 'center'}}>
+                                            <small style={{color:'#bdc3c7'}}>LUCRO LÍQUIDO {filter}</small><br/>
+                                            <b style={{color: 'var(--success)', fontSize: '28px'}}>R$ {filteredHistory.reduce((acc, curr) => acc + curr.net, 0).toFixed(2)}</b>
                                         </div>
-                                    )
-                                ))}
+                                        {filteredHistory.map(item => (
+                                            item.type === 'MARKER' ? <div key={item.id} className="finish-divider">🏁 {item.label} - {item.time}</div> :
+                                            <div key={item.id} className="history-item" style={{borderLeftColor: item.type === 'EXTRA' ? (item.net > 0 ? '#2ecc71' : '#e74c3c') : getQuality(item.rate).color}}>
+                                                <div style={{flex:1}}>
+                                                    <small>{item.time}</small><br/>
+                                                    <b>{item.type === 'CORRIDA' ? `${item.km} km` : item.label}</b><br/>
+                                                    {item.type === 'CORRIDA' && <span className="badge" style={{background: getQuality(item.rate).color}}>{getQuality(item.rate).label}</span>}
+                                                </div>
+                                                <div style={{textAlign:'right', display:'flex', alignItems:'center', gap: '10px'}}>
+                                                    <b style={{color: item.net >= 0 ? 'var(--success)' : 'var(--danger)'}}>R$ {Math.abs(item.net).toFixed(2)}</b>
+                                                    <div className="item-actions">
+                                                        {item.type === 'EXTRA' && <button className="btn-icon" onClick={() => {setTab('CALC'); setEditId(item.id); setExtraLabel(item.label); setExtraValue(Math.abs(item.net).toString());}}>✏️</button>}
+                                                        <button className="btn-icon" onClick={() => confirm("Excluir?") && setHistory(history.filter(i => i.id !== item.id))}>🗑️</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
 
                         {tab === 'CONFIG' && (
-                            <div>
-                                <div className="card">
-                                    <div className="card-title">Metas do Gerente</div>
-                                    <label><small>Meta do Plano Total (R$)</small></label>
-                                    <input className="input" type="number" value={totalGoal} onChange={e => setTotalGoal(e.target.value)} />
-                                    <label><small>Meta por Turno/Dia (R$)</small></label>
-                                    <input className="input" type="number" value={dailyGoal} onChange={e => setDailyGoal(e.target.value)} />
+                            <div className="card">
+                                <div className="card-title">Configurações</div>
+                                <label><small>Meta do Plano (R$)</small></label>
+                                <input className="input" type="number" value={totalGoal} onChange={e => setTotalGoal(e.target.value)} />
+                                <div style={{display:'flex', gap:'10px'}}>
+                                    <div style={{flex:1}}><label><small>KM/L</small></label><input className="input" type="number" value={kmLitro} onChange={e => setKmLitro(e.target.value)} /></div>
+                                    <div style={{flex:1}}><label><small>Preço Litro</small></label><input className="input" type="number" value={gasPrice} onChange={e => setGasPrice(e.target.value)} /></div>
                                 </div>
-                                <div className="card">
-                                    <div className="card-title">Consumo do Veículo</div>
-                                    <div style={{display:'flex', gap:'10px'}}>
-                                        <div style={{flex:1}}><label><small>Média KM/L</small></label><input className="input" type="number" value={kmLitro} onChange={e => setKmLitro(e.target.value)} /></div>
-                                        <div style={{flex:1}}><label><small>Preço Litro</small></label><input className="input" type="number" value={gasPrice} onChange={e => setGasPrice(e.target.value)} /></div>
-                                    </div>
-                                </div>
-                                <button className="btn btn-danger" onClick={() => confirm("Apagar todos os dados?") && setHistory([])}>LIMPAR TUDO</button>
+                                <button className="btn btn-danger" style={{marginTop: 20}} onClick={() => confirm("Resetar tudo?") && setHistory([]) || setTurnHistory([])}>LIMPAR TODOS OS DADOS</button>
                             </div>
                         )}
                     </div>
+
+                    {showModal && lastSummary && (
+                        <div className="modal">
+                            <div className="modal-content">
+                                <h2 style={{color: 'var(--primary)', margin: '0 0 10px'}}>Turno Finalizado!</h2>
+                                <div style={{textAlign: 'left', background: '#f8f9fa', padding: '15px', borderRadius: '15px', margin: '15px 0'}}>
+                                    <p>Total Rodado: <b>{lastSummary.km} KM</b></p>
+                                    <p>Gasto Gasolina: <b style={{color: 'var(--danger)'}}>R$ {lastSummary.fuel.toFixed(2)}</b></p>
+                                    <p>Ganhos Brutos: <b>R$ {lastSummary.gross.toFixed(2)}</b></p>
+                                    <hr style={{opacity: 0.1}}/>
+                                    <p style={{fontSize: '18px'}}>Sobrou no Bolso:<br/><b style={{color: 'var(--success)', fontSize: '24px'}}>R$ {lastSummary.net.toFixed(2)}</b></p>
+                                </div>
+                                <button className="btn btn-success" onClick={() => setShowModal(false)}>FECHAR E CONTINUAR</button>
+                            </div>
+                        </div>
+                    )}
+
                     <nav className="tab-bar">
                         <button className={`tab-item ${tab === 'CALC' ? 'tab-active' : ''}`} onClick={() => setTab('CALC')}>LANÇAR</button>
-                        <button className={`tab-item ${tab === 'META' ? 'tab-active' : ''}`} onClick={() => setTab('META')}>METAS</button>
+                        <button className={`tab-item ${tab === 'META' ? 'tab-active' : ''}`} onClick={() => setTab('META')}>HISTÓRICO</button>
                         <button className={`tab-item ${tab === 'CONFIG' ? 'tab-active' : ''}`} onClick={() => setTab('CONFIG')}>AJUSTES</button>
                     </nav>
                 </div>
