@@ -4,32 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>ENTREGADOR PRO V6 - INTELIGENTE</title>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>ENTREGADOR PRO - COMPLETO</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        :root { --primary: #2c3e50; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; --bg: #f8f9fa; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; margin: 0; background: var(--bg); color: #333; }
-        .header { background: var(--primary); color: white; padding: 45px 20px 20px; text-align: center; font-weight: bold; border-radius: 0 0 20px 20px; }
-        .content { padding: 15px; padding-bottom: 100px; }
-        .card { background: white; padding: 20px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 15px; }
+        :root { --primary: #2c3e50; --success: #2ecc71; --danger: #e74c3c; --warning: #f1c40f; --bg: #f8f9fa; --accent: #3498db; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; margin: 0; background: var(--bg); color: #333; user-select: none; }
+        .header { background: var(--primary); color: white; padding: 50px 20px 20px; text-align: center; font-weight: bold; letter-spacing: 2px; position: sticky; top: 0; z-index: 10; }
+        .content { padding: 20px; padding-bottom: 110px; }
+        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
+        .card-title { font-size: 13px; font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--primary); text-transform: uppercase; }
         
-        .tax-selector { display: flex; background: #eee; border-radius: 10px; padding: 4px; margin-bottom: 15px; }
-        .tax-opt { flex: 1; padding: 10px; text-align: center; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; color: #7f8c8d; }
-        .tax-active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
-        .input-label { display: block; font-size: 11px; color: #7f8c8d; margin: 0 0 5px 5px; font-weight: bold; }
-        .input { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #f1f3f5; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
+        /* Seletor de Modo de Lançamento */
+        .tax-selector { display: flex; background: #f1f3f5; border-radius: 12px; padding: 4px; margin-bottom: 15px; }
+        .tax-opt { flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; color: #7f8c8d; }
+        .tax-active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+
+        .input { width: 100%; padding: 15px; margin-bottom: 12px; border: none; background: #f1f3f5; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; }
         .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-accent { background: var(--accent); color: white; }
         
-        .status-box { padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 2px solid transparent; }
-        .tab-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; border-top: 1px solid #eee; }
-        .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border: none; background: none; color: #bdc3c7; font-size: 11px; font-weight: bold; }
+        .status-box { padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0; font-weight: bold; border: 2px solid transparent; }
+        .tab-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom); }
+        .tab-item { flex: 1; display: flex; align-items: center; justify-content: center; border: none; background: none; color: #bdc3c7; font-weight: bold; font-size: 12px; }
         .tab-active { color: var(--primary); border-top: 3px solid var(--primary); }
+        
+        .history-item { background: white; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-left: 5px solid #ddd; }
+        .finish-divider { text-align: center; font-size: 10px; color: #95a5a6; margin: 15px 0; font-weight: bold; }
+        
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; text-align: center; }
+        label { display: block; font-size: 11px; margin-bottom: 5px; color: #7f8c8d; font-weight: bold; margin-left: 5px; }
     </style>
 </head>
 <body>
@@ -38,117 +49,172 @@
         const { useState, useEffect } = React;
 
         function App() {
-            const [tab, setTab] = useState('LANÇAR');
+            const [tab, setTab] = useState('CALC');
             const [modoTaxa, setModoTaxa] = useState('BRUTO'); 
-            const [valor, setValor] = useState('');
+            const [price, setPrice] = useState('');
             const [km, setKm] = useState('');
+            const [history, setHistory] = useState([]);
+            const [turnHistory, setTurnHistory] = useState([]);
+            const [showModal, setShowModal] = useState(false);
+            const [lastSummary, setLastSummary] = useState(null);
+
+            // Ajustes Profissionais
             const [appTax, setAppTax] = useState('20');
-            const [gas, setGas] = useState('5.80');
-            const [consumo, setConsumo] = useState('10');
-            const [historico, setHistorico] = useState([]);
+            const [kmLitro, setKmLitro] = useState('10'); 
+            const [gasPrice, setGasPrice] = useState('5.80'); 
 
             useEffect(() => {
-                const saved = localStorage.getItem('@entregador_v6');
+                const saved = localStorage.getItem('@entregador_pro_vFinal');
                 if (saved) {
-                    const p = JSON.parse(saved);
-                    setHistorico(p.historico || []);
-                    setAppTax(p.appTax || '20');
-                    setGas(p.gas || '5.80');
-                    setConsumo(p.consumo || '10');
+                    const parsed = JSON.parse(saved);
+                    setHistory(parsed.history || []);
+                    setTurnHistory(parsed.turnHistory || []);
+                    setAppTax(parsed.appTax || '20');
+                    setKmLitro(parsed.kmLitro || '10');
+                    setGasPrice(parsed.gasPrice || '5.80');
                 }
             }, []);
 
             useEffect(() => {
-                localStorage.setItem('@entregador_v6', JSON.stringify({ historico, appTax, gas, consumo }));
-            }, [historico, appTax, gas, consumo]);
+                localStorage.setItem('@entregador_pro_vFinal', JSON.stringify({ history, turnHistory, appTax, kmLitro, gasPrice }));
+            }, [history, turnHistory, appTax, kmLitro, gasPrice]);
 
-            const valorAposTaxa = modoTaxa === 'BRUTO' ? valor * (1 - appTax/100) : parseFloat(valor);
-            const custoCombustivel = (km / consumo) * gas;
-            const lucroFinal = (valorAposTaxa - custoCombustivel) || 0;
-            const valorKmReal = km > 0 ? (lucroFinal / km) : 0;
+            const fuelCostKm = parseFloat(gasPrice) / parseFloat(kmLitro);
+            
+            // Cálculo baseado no modo selecionado
+            const currentPriceAfterTax = modoTaxa === 'BRUTO' ? parseFloat(price) * ((100 - appTax)/100) : parseFloat(price);
+            const currentNet = (currentPriceAfterTax - (parseFloat(km) * fuelCostKm)) || 0;
+            const currentRate = (currentPriceAfterTax / parseFloat(km)) || 0;
 
             const getQuality = (rate) => {
-                if (rate >= 1.8) return { label: 'CORRIDA EXCELENTE', color: '#2ecc71' };
-                if (rate >= 1.3) return { label: 'CORRIDA ACEITÁVEL', color: '#f1c40f' };
-                return { label: 'NÃO VALE A PENA', color: '#e74c3c' };
+                if (rate >= 1.8) return { label: 'BOA', color: '#2ecc71' };
+                if (rate >= 1.3) return { label: 'MÉDIA', color: '#f1c40f' };
+                return { label: 'RUIM', color: '#e74c3c' };
             };
 
-            const salvarCorrida = () => {
-                if (!valor || !km) return;
-                const nova = { 
+            const addRide = () => {
+                const ride = { 
                     id: Date.now(), 
-                    lucro: lucroFinal, 
-                    km: km, 
-                    rate: valorKmReal,
-                    data: new Date().toLocaleDateString(),
-                    hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                    grossDisplay: modoTaxa === 'BRUTO' ? parseFloat(price) : parseFloat(price) / ((100 - appTax)/100),
+                    received: currentPriceAfterTax,
+                    net: currentNet, 
+                    km: parseFloat(km), 
+                    rate: currentRate, 
+                    type: 'CORRIDA', 
+                    date: new Date().toLocaleDateString(), 
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
                 };
-                setHistorico([nova, ...historico]);
-                setValor(''); setKm('');
+                setHistory([ride, ...history]);
+                setPrice(''); setKm('');
+            };
+
+            const finishTurn = () => {
+                const lastMarkerIndex = history.findIndex(h => h.type === 'MARKER');
+                const itemsThisTurn = lastMarkerIndex === -1 ? history : history.slice(0, lastMarkerIndex);
+                
+                if (itemsThisTurn.length === 0) return alert("Nada para finalizar.");
+
+                const kmTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.km || 0), 0);
+                const fuelTotal = kmTotal * fuelCostKm;
+                const netTotal = itemsThisTurn.reduce((acc, curr) => acc + curr.net, 0);
+                const grossTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.grossDisplay || 0), 0);
+
+                const summary = { id: Date.now(), date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString(), km: kmTotal, fuel: fuelTotal, net: netTotal, gross: grossTotal };
+                
+                setLastSummary(summary);
+                setTurnHistory([summary, ...turnHistory]);
+                setHistory([{ id: Date.now(), type: 'MARKER', label: 'TURNO FINALIZADO', time: summary.time, net: 0 }, ...history]);
+                setShowModal(true);
             };
 
             return (
                 <div>
-                    <div className="header">ENTREGADOR PRO V6</div>
+                    <div className="header">ENTREGADOR PRO</div>
                     
                     <div className="content">
-                        {tab === 'LANÇAR' && (
-                            <div className="card">
-                                <span className="input-label">O VALOR ABAIXO É:</span>
-                                <div className="tax-selector">
-                                    <div className={`tax-opt ${modoTaxa === 'BRUTO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('BRUTO')}>BRUTO (No App)</div>
-                                    <div className={`tax-opt ${modoTaxa === 'LÍQUIDO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('LÍQUIDO')}>LÍQUIDO (Na Conta)</div>
-                                </div>
-
-                                <input className="input" type="number" value={valor} onChange={e => setValor(e.target.value)} placeholder="Valor R$" />
-                                <input className="input" type="number" value={km} onChange={e => setKm(e.target.value)} placeholder="Distância KM" />
-
-                                {valorKmReal > 0 && (
-                                    <div className="status-box" style={{ borderColor: getQuality(valorKmReal).color, color: getQuality(valorKmReal).color }}>
-                                        {getQuality(valorKmReal).label}<br/>
-                                        <small style={{color: '#333'}}>Sobra: R$ {lucroFinal.toFixed(2)} | R$ {valorKmReal.toFixed(2)}/km</small>
+                        {tab === 'CALC' && (
+                            <div>
+                                <div className="card">
+                                    <div className="card-title">Como vai lançar?</div>
+                                    <div className="tax-selector">
+                                        <div className={`tax-opt ${modoTaxa === 'BRUTO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('BRUTO')}>VALOR NO APP (BRUTO)</div>
+                                        <div className={`tax-opt ${modoTaxa === 'LÍQUIDO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('LÍQUIDO')}>VALOR NA CONTA (LÍQUIDO)</div>
                                     </div>
-                                )}
 
-                                <button className="btn btn-success" onClick={salvarCorrida}>REGISTRAR NO FECHAMENTO</button>
+                                    <input className="input" type="number" placeholder="Valor (R$)" value={price} onChange={e => setPrice(e.target.value)} />
+                                    <input className="input" type="number" placeholder="Distância (KM)" value={km} onChange={e => setKm(e.target.value)} />
+                                    
+                                    {currentRate > 0 && (
+                                        <div className="status-box" style={{ borderColor: getQuality(currentRate).color }}>
+                                            <span style={{color: getQuality(currentRate).color}}>ESTA CORRIDA É {getQuality(currentRate).label}</span>
+                                            <br/><small>Sobra Real: R$ {currentNet.toFixed(2)} | R$ {currentRate.toFixed(2)}/km</small>
+                                        </div>
+                                    )}
+                                    {parseFloat(price) > 0 && <button className="btn btn-success" onClick={addRide}>LANÇAR AGORA</button>}
+                                </div>
+                                <button className="btn btn-primary" style={{background: '#2c3e50', color: 'white'}} onClick={finishTurn}>🏁 FINALIZAR DIA E VER RESUMO</button>
                             </div>
                         )}
 
                         {tab === 'HISTÓRICO' && (
                             <div>
-                                <div className="card" style={{textAlign: 'center', background: '#2c3e50', color: 'white'}}>
-                                    <small>LUCRO REAL TOTAL</small><br/>
-                                    <b style={{fontSize: '26px', color: '#2ecc71'}}>R$ {historico.reduce((acc, c) => acc + c.lucro, 0).toFixed(2)}</b>
+                                <div className="card" style={{background: '#2c3e50', color: 'white', textAlign: 'center'}}>
+                                    <small style={{color:'#bdc3c7'}}>LUCRO TOTAL ACUMULADO</small><br/>
+                                    <b style={{color: 'var(--success)', fontSize: '28px'}}>R$ {history.reduce((acc, curr) => acc + curr.net, 0).toFixed(2)}</b>
                                 </div>
-                                {historico.map(item => (
-                                    <div key={item.id} className="card" style={{display:'flex', justifyContent:'space-between', padding:'15px', borderLeft: `6px solid ${getQuality(item.rate).color}`}}>
-                                        <div><small>{item.data}</small><br/><b>{item.km} KM</b></div>
-                                        <div style={{textAlign:'right'}}><b style={{color:'#2ecc71'}}>+ R$ {item.lucro.toFixed(2)}</b><br/><small>{item.rate.toFixed(2)}/km</small></div>
+                                {history.map(item => (
+                                    item.type === 'MARKER' ? <div key={item.id} className="finish-divider">─── {item.label} às {item.time} ───</div> :
+                                    <div key={item.id} className="history-item" style={{borderLeftColor: getQuality(item.rate).color}}>
+                                        <div style={{flex:1}}>
+                                            <small>{item.time}</small><br/>
+                                            <b>{item.km} KM rodados</b>
+                                        </div>
+                                        <div style={{textAlign:'right'}}>
+                                            <b style={{color: 'var(--success)'}}>+ R$ {item.net.toFixed(2)}</b><br/>
+                                            <small>{item.rate.toFixed(2)}/km</small>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
-                        {tab === 'AJUSTES' && (
+                        {tab === 'CONFIG' && (
                             <div className="card">
-                                <span className="input-label">CONFIGURAÇÕES DE CUSTO</span>
-                                <input className="input" type="number" value={appTax} onChange={e => setAppTax(e.target.value)} placeholder="Taxa App %" />
-                                <input className="input" type="number" value={gas} onChange={e => setGas(e.target.value)} placeholder="Gasolina R$" />
-                                <input className="input" type="number" value={consumo} onChange={e => setConsumo(e.target.value)} placeholder="Consumo KM/L" />
-                                <button className="btn" style={{background:'#eee'}} onClick={() => confirm('Limpar histórico?') && setHistorico([])}>LIMPAR DADOS</button>
+                                <div className="card-title">Ajustes de Cálculo</div>
+                                <label>Taxa da Lalamove (%)</label>
+                                <input className="input" type="number" value={appTax} onChange={e => setAppTax(e.target.value)} />
+                                <div style={{display:'flex', gap:'10px'}}>
+                                    <div style={{flex:1}}><label>KM/L</label><input className="input" type="number" value={kmLitro} onChange={e => setKmLitro(e.target.value)} /></div>
+                                    <div style={{flex:1}}><label>Gasolina (R$)</label><input className="input" type="number" value={gasPrice} onChange={e => setGasPrice(e.target.value)} /></div>
+                                </div>
+                                <button className="btn btn-danger" style={{marginTop: 20}} onClick={() => confirm("Apagar tudo?") && (setHistory([]), setTurnHistory([]))}>LIMPAR DADOS</button>
                             </div>
                         )}
                     </div>
 
+                    {showModal && lastSummary && (
+                        <div className="modal">
+                            <div className="modal-content">
+                                <h2 style={{color: 'var(--primary)', margin: '0 0 10px'}}>Dia Finalizado!</h2>
+                                <div style={{textAlign: 'left', background: '#f8f9fa', padding: '15px', borderRadius: '15px', margin: '15px 0'}}>
+                                    <p>Total Rodado: <b>{lastSummary.km} KM</b></p>
+                                    <p>Gasto Gasolina: <b style={{color: 'var(--danger)'}}>R$ {lastSummary.fuel.toFixed(2)}</b></p>
+                                    <hr style={{opacity: 0.1}}/>
+                                    <p style={{fontSize: '18px'}}>LUCRO NO BOLSO:<br/><b style={{color: 'var(--success)', fontSize: '26px'}}>R$ {lastSummary.net.toFixed(2)}</b></p>
+                                </div>
+                                <button className="btn btn-success" onClick={() => setShowModal(false)}>CONCLUIR</button>
+                            </div>
+                        </div>
+                    )}
+
                     <nav className="tab-bar">
-                        <button className={`tab-item ${tab === 'LANÇAR' ? 'tab-active' : ''}`} onClick={() => setTab('LANÇAR')}>LANÇAR</button>
+                        <button className={`tab-item ${tab === 'CALC' ? 'tab-active' : ''}`} onClick={() => setTab('CALC')}>LANÇAR</button>
                         <button className={`tab-item ${tab === 'HISTÓRICO' ? 'tab-active' : ''}`} onClick={() => setTab('HISTÓRICO')}>HISTÓRICO</button>
-                        <button className={`tab-item ${tab === 'AJUSTES' ? 'tab-active' : ''}`} onClick={() => setTab('AJUSTES')}>AJUSTES</button>
+                        <button className={`tab-item ${tab === 'CONFIG' ? 'tab-active' : ''}`} onClick={() => setTab('CONFIG')}>AJUSTES</button>
                     </nav>
                 </div>
             );
         }
-
         const root = ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
     </script>
