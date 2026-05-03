@@ -19,7 +19,6 @@
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
         .card-title { font-size: 13px; font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--primary); text-transform: uppercase; }
         
-        /* Seletor de Modo de Lançamento */
         .tax-selector { display: flex; background: #f1f3f5; border-radius: 12px; padding: 4px; margin-bottom: 15px; }
         .tax-opt { flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; color: #7f8c8d; }
         .tax-active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
@@ -58,13 +57,12 @@
             const [showModal, setShowModal] = useState(false);
             const [lastSummary, setLastSummary] = useState(null);
 
-            // Ajustes Profissionais
             const [appTax, setAppTax] = useState('20');
             const [kmLitro, setKmLitro] = useState('10'); 
             const [gasPrice, setGasPrice] = useState('5.80'); 
 
             useEffect(() => {
-                const saved = localStorage.getItem('@entregador_pro_vFinal');
+                const saved = localStorage.getItem('@entregador_pro_vFinal_gas');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     setHistory(parsed.history || []);
@@ -76,14 +74,14 @@
             }, []);
 
             useEffect(() => {
-                localStorage.setItem('@entregador_pro_vFinal', JSON.stringify({ history, turnHistory, appTax, kmLitro, gasPrice }));
+                localStorage.setItem('@entregador_pro_vFinal_gas', JSON.stringify({ history, turnHistory, appTax, kmLitro, gasPrice }));
             }, [history, turnHistory, appTax, kmLitro, gasPrice]);
 
             const fuelCostKm = parseFloat(gasPrice) / parseFloat(kmLitro);
             
-            // Cálculo baseado no modo selecionado
             const currentPriceAfterTax = modoTaxa === 'BRUTO' ? parseFloat(price) * ((100 - appTax)/100) : parseFloat(price);
-            const currentNet = (currentPriceAfterTax - (parseFloat(km) * fuelCostKm)) || 0;
+            const currentFuelGasto = (parseFloat(km) * fuelCostKm) || 0;
+            const currentNet = (currentPriceAfterTax - currentFuelGasto) || 0;
             const currentRate = (currentPriceAfterTax / parseFloat(km)) || 0;
 
             const getQuality = (rate) => {
@@ -97,6 +95,7 @@
                     id: Date.now(), 
                     grossDisplay: modoTaxa === 'BRUTO' ? parseFloat(price) : parseFloat(price) / ((100 - appTax)/100),
                     received: currentPriceAfterTax,
+                    fuelGasto: currentFuelGasto,
                     net: currentNet, 
                     km: parseFloat(km), 
                     rate: currentRate, 
@@ -115,7 +114,7 @@
                 if (itemsThisTurn.length === 0) return alert("Nada para finalizar.");
 
                 const kmTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.km || 0), 0);
-                const fuelTotal = kmTotal * fuelCostKm;
+                const fuelTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.fuelGasto || 0), 0);
                 const netTotal = itemsThisTurn.reduce((acc, curr) => acc + curr.net, 0);
                 const grossTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.grossDisplay || 0), 0);
 
@@ -147,7 +146,7 @@
                                     {currentRate > 0 && (
                                         <div className="status-box" style={{ borderColor: getQuality(currentRate).color }}>
                                             <span style={{color: getQuality(currentRate).color}}>ESTA CORRIDA É {getQuality(currentRate).label}</span>
-                                            <br/><small>Sobra Real: R$ {currentNet.toFixed(2)} | R$ {currentRate.toFixed(2)}/km</small>
+                                            <br/><small>Gasto Gas: R$ {currentFuelGasto.toFixed(2)} | Sobra: R$ {currentNet.toFixed(2)}</small>
                                         </div>
                                     )}
                                     {parseFloat(price) > 0 && <button className="btn btn-success" onClick={addRide}>LANÇAR AGORA</button>}
@@ -159,15 +158,15 @@
                         {tab === 'HISTÓRICO' && (
                             <div>
                                 <div className="card" style={{background: '#2c3e50', color: 'white', textAlign: 'center'}}>
-                                    <small style={{color:'#bdc3c7'}}>LUCRO TOTAL ACUMULADO</small><br/>
+                                    <small style={{color:'#bdc3c7'}}>LUCRO REAL TOTAL (DESCONTADO GASOLINA)</small><br/>
                                     <b style={{color: 'var(--success)', fontSize: '28px'}}>R$ {history.reduce((acc, curr) => acc + curr.net, 0).toFixed(2)}</b>
                                 </div>
                                 {history.map(item => (
                                     item.type === 'MARKER' ? <div key={item.id} className="finish-divider">─── {item.label} às {item.time} ───</div> :
                                     <div key={item.id} className="history-item" style={{borderLeftColor: getQuality(item.rate).color}}>
                                         <div style={{flex:1}}>
-                                            <small>{item.time}</small><br/>
-                                            <b>{item.km} KM rodados</b>
+                                            <small>{item.time} - {item.km} KM</small><br/>
+                                            <small style={{color: 'var(--danger)'}}>Gas: -R$ {item.fuelGasto.toFixed(2)}</small>
                                         </div>
                                         <div style={{textAlign:'right'}}>
                                             <b style={{color: 'var(--success)'}}>+ R$ {item.net.toFixed(2)}</b><br/>
