@@ -4,30 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <title>ENTREGADOR PRO V4 - GESTÃO ATIVA</title>
+    <title>ENTREGADOR PRO V6 - INTELIGENTE</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        :root { --primary: #1a1a1a; --success: #00c853; --danger: #ff3d00; --bg: #f0f2f5; }
-        body { font-family: -apple-system, system-ui; margin: 0; background: var(--bg); padding-bottom: 90px; }
-        .header { background: var(--primary); color: white; padding: 40px 20px 20px; text-align: center; font-weight: 800; border-radius: 0 0 25px 25px; }
-        .container { padding: 15px; }
-        .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        .card-title { font-size: 14px; color: #666; text-transform: uppercase; margin-bottom: 15px; font-weight: 700; }
-        .input-group { margin-bottom: 15px; }
-        label { display: block; font-size: 12px; margin-bottom: 5px; color: #888; padding-left: 5px; }
-        .input { width: 100%; padding: 14px; border: 2px solid #f0f0f0; border-radius: 12px; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
-        .input:focus { border-color: var(--primary); outline: none; }
-        .btn { width: 100%; padding: 18px; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; transition: 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-save { background: var(--success); color: white; margin-top: 10px; }
-        .sim-result { background: #f8f9fa; border-radius: 15px; padding: 15px; margin: 15px 0; border: 2px dashed #ddd; text-align: center; }
-        .stat-value { font-size: 24px; font-weight: 900; display: block; }
-        .tab-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; border-top: 1px solid #eee; height: 75px; z-index: 100; }
-        .tab-btn { flex: 1; border: none; background: none; font-size: 11px; font-weight: 700; color: #aaa; }
+        :root { --primary: #2c3e50; --success: #2ecc71; --warning: #f1c40f; --danger: #e74c3c; --bg: #f8f9fa; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; margin: 0; background: var(--bg); color: #333; }
+        .header { background: var(--primary); color: white; padding: 45px 20px 20px; text-align: center; font-weight: bold; border-radius: 0 0 20px 20px; }
+        .content { padding: 15px; padding-bottom: 100px; }
+        .card { background: white; padding: 20px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 15px; }
+        
+        .tax-selector { display: flex; background: #eee; border-radius: 10px; padding: 4px; margin-bottom: 15px; }
+        .tax-opt { flex: 1; padding: 10px; text-align: center; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; color: #7f8c8d; }
+        .tax-active { background: white; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        .input-label { display: block; font-size: 11px; color: #7f8c8d; margin: 0 0 5px 5px; font-weight: bold; }
+        .input { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #f1f3f5; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 15px; cursor: pointer; }
+        .btn-success { background: var(--success); color: white; }
+        
+        .status-box { padding: 15px; border-radius: 12px; text-align: center; margin-bottom: 15px; font-weight: bold; border: 2px solid transparent; }
+        .tab-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; border-top: 1px solid #eee; }
+        .tab-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; border: none; background: none; color: #bdc3c7; font-size: 11px; font-weight: bold; }
         .tab-active { color: var(--primary); border-top: 3px solid var(--primary); }
     </style>
 </head>
@@ -37,115 +38,112 @@
         const { useState, useEffect } = React;
 
         function App() {
-            const [view, setView] = useState('SIMULAR');
-            const [bruto, setBruto] = useState('');
+            const [tab, setTab] = useState('LANÇAR');
+            const [modoTaxa, setModoTaxa] = useState('BRUTO'); 
+            const [valor, setValor] = useState('');
             const [km, setKm] = useState('');
-            const [taxa, setTaxa] = useState(20);
-            const [gas, setGas] = useState(5.80);
-            const [consumo, setConsumo] = useState(10);
+            const [appTax, setAppTax] = useState('20');
+            const [gas, setGas] = useState('5.80');
+            const [consumo, setConsumo] = useState('10');
             const [historico, setHistorico] = useState([]);
 
             useEffect(() => {
-                const data = localStorage.getItem('PRO_DELIVERY_DATA');
-                if (data) setHistorico(JSON.parse(data));
+                const saved = localStorage.getItem('@entregador_v6');
+                if (saved) {
+                    const p = JSON.parse(saved);
+                    setHistorico(p.historico || []);
+                    setAppTax(p.appTax || '20');
+                    setGas(p.gas || '5.80');
+                    setConsumo(p.consumo || '10');
+                }
             }, []);
 
             useEffect(() => {
-                localStorage.setItem('PRO_DELIVERY_DATA', JSON.stringify(historico));
-            }, [historico]);
+                localStorage.setItem('@entregador_v6', JSON.stringify({ historico, appTax, gas, consumo }));
+            }, [historico, appTax, gas, consumo]);
 
-            // Cálculos
-            const valorLiquidoApp = bruto * (1 - taxa/100);
-            const custoGas = (km / consumo) * gas;
-            const lucroReal = valorLiquidoApp - custoGas;
-            const valorKm = km > 0 ? (lucroReal / km).toFixed(2) : 0;
+            const valorAposTaxa = modoTaxa === 'BRUTO' ? valor * (1 - appTax/100) : parseFloat(valor);
+            const custoCombustivel = (km / consumo) * gas;
+            const lucroFinal = (valorAposTaxa - custoCombustivel) || 0;
+            const valorKmReal = km > 0 ? (lucroFinal / km) : 0;
 
-            const salvar = () => {
-                if (!bruto || !km) return alert("Preencha os valores");
-                const nova = { id: Date.now(), bruto, km, lucroReal, valorKm, data: new Date().toLocaleDateString() };
-                setHistorico([nova, ...historico]);
-                setBruto(''); setKm('');
-                alert("Corrida registrada com sucesso!");
+            const getQuality = (rate) => {
+                if (rate >= 1.8) return { label: 'CORRIDA EXCELENTE', color: '#2ecc71' };
+                if (rate >= 1.3) return { label: 'CORRIDA ACEITÁVEL', color: '#f1c40f' };
+                return { label: 'NÃO VALE A PENA', color: '#e74c3c' };
             };
 
-            const totalLucro = historico.reduce((acc, c) => acc + c.lucroReal, 0);
+            const salvarCorrida = () => {
+                if (!valor || !km) return;
+                const nova = { 
+                    id: Date.now(), 
+                    lucro: lucroFinal, 
+                    km: km, 
+                    rate: valorKmReal,
+                    data: new Date().toLocaleDateString(),
+                    hora: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
+                };
+                setHistorico([nova, ...historico]);
+                setValor(''); setKm('');
+            };
 
             return (
                 <div>
-                    <div className="header">ENTREGADOR PRO V4</div>
+                    <div className="header">ENTREGADOR PRO V6</div>
                     
-                    <div className="container">
-                        {view === 'SIMULAR' && (
+                    <div className="content">
+                        {tab === 'LANÇAR' && (
                             <div className="card">
-                                <div className="card-title">Simular Ganho Real</div>
-                                <div className="input-group">
-                                    <label>Valor Bruto no App (R$)</label>
-                                    <input className="input" type="number" value={bruto} onChange={e => setBruto(e.target.value)} placeholder="0,00" />
-                                </div>
-                                <div className="input-group">
-                                    <label>KM Total da Corrida</label>
-                                    <input className="input" type="number" value={km} onChange={e => setKm(e.target.value)} placeholder="0" />
+                                <span className="input-label">O VALOR ABAIXO É:</span>
+                                <div className="tax-selector">
+                                    <div className={`tax-opt ${modoTaxa === 'BRUTO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('BRUTO')}>BRUTO (No App)</div>
+                                    <div className={`tax-opt ${modoTaxa === 'LÍQUIDO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('LÍQUIDO')}>LÍQUIDO (Na Conta)</div>
                                 </div>
 
-                                {bruto > 0 && km > 0 && (
-                                    <div className="sim-result">
-                                        <small style={{color: '#888'}}>LUCRO LIVRE ESTIMADO</small>
-                                        <span className="stat-value" style={{color: lucroReal > 0 ? 'var(--success)' : 'var(--danger)'}}>
-                                            R$ {lucroReal.toFixed(2)}
-                                        </span>
-                                        <small>R$ {valorKm} por KM</small>
+                                <input className="input" type="number" value={valor} onChange={e => setValor(e.target.value)} placeholder="Valor R$" />
+                                <input className="input" type="number" value={km} onChange={e => setKm(e.target.value)} placeholder="Distância KM" />
+
+                                {valorKmReal > 0 && (
+                                    <div className="status-box" style={{ borderColor: getQuality(valorKmReal).color, color: getQuality(valorKmReal).color }}>
+                                        {getQuality(valorKmReal).label}<br/>
+                                        <small style={{color: '#333'}}>Sobra: R$ {lucroFinal.toFixed(2)} | R$ {valorKmReal.toFixed(2)}/km</small>
                                     </div>
                                 )}
-                                
-                                <button className="btn btn-save" onClick={salvar}>SALVAR NO HISTÓRICO</button>
+
+                                <button className="btn btn-success" onClick={salvarCorrida}>REGISTRAR NO FECHAMENTO</button>
                             </div>
                         )}
 
-                        {view === 'RESUMO' && (
+                        {tab === 'HISTÓRICO' && (
                             <div>
-                                <div className="card" style={{background: 'var(--primary)', color: 'white'}}>
-                                    <div className="card-title" style={{color: '#aaa'}}>Acumulado do Mês</div>
-                                    <span className="stat-value" style={{color: 'var(--success)'}}>R$ {totalLucro.toFixed(2)}</span>
+                                <div className="card" style={{textAlign: 'center', background: '#2c3e50', color: 'white'}}>
+                                    <small>LUCRO REAL TOTAL</small><br/>
+                                    <b style={{fontSize: '26px', color: '#2ecc71'}}>R$ {historico.reduce((acc, c) => acc + c.lucro, 0).toFixed(2)}</b>
                                 </div>
                                 {historico.map(item => (
-                                    <div key={item.id} className="card" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '15px'}}>
-                                        <div>
-                                            <small>{item.data}</small><br/>
-                                            <b>{item.km} KM rodados</b>
-                                        </div>
-                                        <div style={{textAlign: 'right'}}>
-                                            <b style={{color: 'var(--success)'}}>+ R$ {item.lucroReal.toFixed(2)}</b><br/>
-                                            <small>R$ {item.valorKm}/km</small>
-                                        </div>
+                                    <div key={item.id} className="card" style={{display:'flex', justifyContent:'space-between', padding:'15px', borderLeft: `6px solid ${getQuality(item.rate).color}`}}>
+                                        <div><small>{item.data}</small><br/><b>{item.km} KM</b></div>
+                                        <div style={{textAlign:'right'}}><b style={{color:'#2ecc71'}}>+ R$ {item.lucro.toFixed(2)}</b><br/><small>{item.rate.toFixed(2)}/km</small></div>
                                     </div>
                                 ))}
                             </div>
                         )}
 
-                        {view === 'CONFIG' && (
+                        {tab === 'AJUSTES' && (
                             <div className="card">
-                                <div className="card-title">Ajustes de Custos</div>
-                                <div className="input-group">
-                                    <label>Taxa Lalamove (%)</label>
-                                    <input className="input" type="number" value={taxa} onChange={e => setTaxa(e.target.value)} />
-                                </div>
-                                <div className="input-group">
-                                    <label>Preço Gasolina (R$)</label>
-                                    <input className="input" type="number" value={gas} onChange={e => setGas(e.target.value)} />
-                                </div>
-                                <div className="input-group">
-                                    <label>Consumo do Veículo (KM/L)</label>
-                                    <input className="input" type="number" value={consumo} onChange={e => setConsumo(e.target.value)} />
-                                </div>
-                                <button className="btn btn-primary" onClick={() => confirm('Limpar tudo?') && setHistorico([])}>LIMPAR BANCO DE DADOS</button>
+                                <span className="input-label">CONFIGURAÇÕES DE CUSTO</span>
+                                <input className="input" type="number" value={appTax} onChange={e => setAppTax(e.target.value)} placeholder="Taxa App %" />
+                                <input className="input" type="number" value={gas} onChange={e => setGas(e.target.value)} placeholder="Gasolina R$" />
+                                <input className="input" type="number" value={consumo} onChange={e => setConsumo(e.target.value)} placeholder="Consumo KM/L" />
+                                <button className="btn" style={{background:'#eee'}} onClick={() => confirm('Limpar histórico?') && setHistorico([])}>LIMPAR DADOS</button>
                             </div>
                         )}
                     </div>
 
-                    <nav className="tab-nav">
-                        <button className={`tab-btn ${view === 'SIMULAR' ? 'tab-active' : ''}`} onClick={() => setView('SIMULAR')}>SIMULAR</button>
-                        <button className={`tab-btn ${view === 'RESUMO' ? 'tab-active' : ''}`} onClick={() => setView('RESUMO')}>HISTÓRICO</button>
-                        <button className={`tab-btn ${view === 'CONFIG' ? 'tab-active' : ''}`} onClick={() => setView('CONFIG')}>AJUSTES</button>
+                    <nav className="tab-bar">
+                        <button className={`tab-item ${tab === 'LANÇAR' ? 'tab-active' : ''}`} onClick={() => setTab('LANÇAR')}>LANÇAR</button>
+                        <button className={`tab-item ${tab === 'HISTÓRICO' ? 'tab-active' : ''}`} onClick={() => setTab('HISTÓRICO')}>HISTÓRICO</button>
+                        <button className={`tab-item ${tab === 'AJUSTES' ? 'tab-active' : ''}`} onClick={() => setTab('AJUSTES')}>AJUSTES</button>
                     </nav>
                 </div>
             );
