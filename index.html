@@ -3,43 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ENTREGADOR PRO - COMPLETO</title>
+    <title>ENTREGADOR PRO - GESTÃO TOTAL</title>
     
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        :root { --primary: #2c3e50; --success: #2ecc71; --danger: #e74c3c; --warning: #f1c40f; --bg: #f8f9fa; --accent: #3498db; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; margin: 0; background: var(--bg); color: #333; user-select: none; }
-        .header { background: var(--primary); color: white; padding: 50px 20px 20px; text-align: center; font-weight: bold; letter-spacing: 2px; position: sticky; top: 0; z-index: 10; }
+        :root { --primary: #2c3e50; --success: #2ecc71; --danger: #e74c3c; --warning: #f1c40f; --bg: #f8f9fa; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto; margin: 0; background: var(--bg); color: #333; }
+        .header { background: var(--primary); color: white; padding: 50px 20px 20px; text-align: center; font-weight: bold; position: sticky; top: 0; z-index: 10; border-radius: 0 0 20px 20px; }
         .content { padding: 20px; padding-bottom: 110px; }
         .card { background: white; padding: 20px; border-radius: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 15px; border: 1px solid #eee; }
-        .card-title { font-size: 13px; font-weight: bold; margin-bottom: 15px; text-align: center; color: var(--primary); text-transform: uppercase; }
         
         .tax-selector { display: flex; background: #f1f3f5; border-radius: 12px; padding: 4px; margin-bottom: 15px; }
-        .tax-opt { flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; transition: 0.3s; color: #7f8c8d; }
+        .tax-opt { flex: 1; padding: 10px; text-align: center; border-radius: 10px; font-size: 11px; font-weight: bold; cursor: pointer; color: #7f8c8d; }
         .tax-active { background: white; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
         .input { width: 100%; padding: 15px; margin-bottom: 12px; border: none; background: #f1f3f5; border-radius: 12px; font-size: 16px; box-sizing: border-box; outline: none; }
-        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .btn { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; cursor: pointer; }
         .btn-success { background: var(--success); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-accent { background: var(--accent); color: white; }
+        .btn-primary { background: var(--primary); color: white; }
         
-        .status-box { padding: 15px; border-radius: 12px; text-align: center; margin: 10px 0; font-weight: bold; border: 2px solid transparent; }
-        .tab-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; border-top: 1px solid #eee; padding-bottom: env(safe-area-inset-bottom); }
+        .search-box { margin-bottom: 15px; border: 2px solid #eee; }
+        
+        .history-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 6px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
+        .fuel-badge { background: #fee2e2; color: #b91c1c; padding: 2px 8px; border-radius: 5px; font-size: 10px; font-weight: bold; margin-top: 4px; display: inline-block; }
+        
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; text-align: center; }
+        
+        .tab-bar { position: fixed; bottom: 0; width: 100%; height: 75px; background: white; display: flex; border-top: 1px solid #eee; }
         .tab-item { flex: 1; display: flex; align-items: center; justify-content: center; border: none; background: none; color: #bdc3c7; font-weight: bold; font-size: 12px; }
         .tab-active { color: var(--primary); border-top: 3px solid var(--primary); }
-        
-        .history-item { background: white; padding: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-left: 5px solid #ddd; }
-        .finish-divider { text-align: center; font-size: 10px; color: #95a5a6; margin: 15px 0; font-weight: bold; }
-        
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
-        .modal-content { background: white; padding: 25px; border-radius: 25px; width: 100%; max-width: 400px; text-align: center; }
-        label { display: block; font-size: 11px; margin-bottom: 5px; color: #7f8c8d; font-weight: bold; margin-left: 5px; }
+        .finish-divider { text-align: center; font-size: 10px; color: #95a5a6; margin: 15px 0; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -48,25 +45,24 @@
         const { useState, useEffect } = React;
 
         function App() {
-            const [tab, setTab] = useState('CALC');
-            const [modoTaxa, setModoTaxa] = useState('BRUTO'); 
+            const [tab, setTab] = useState('LANÇAR');
+            const [modoTaxa, setModoTaxa] = useState('BRUTO');
             const [price, setPrice] = useState('');
             const [km, setKm] = useState('');
+            const [searchTerm, setSearchTerm] = useState('');
             const [history, setHistory] = useState([]);
-            const [turnHistory, setTurnHistory] = useState([]);
             const [showModal, setShowModal] = useState(false);
             const [lastSummary, setLastSummary] = useState(null);
 
             const [appTax, setAppTax] = useState('20');
-            const [kmLitro, setKmLitro] = useState('10'); 
-            const [gasPrice, setGasPrice] = useState('5.80'); 
+            const [kmLitro, setKmLitro] = useState('10');
+            const [gasPrice, setGasPrice] = useState('5.80');
 
             useEffect(() => {
-                const saved = localStorage.getItem('@entregador_pro_vFinal_gas');
+                const saved = localStorage.getItem('@entregador_vFinal_search');
                 if (saved) {
                     const parsed = JSON.parse(saved);
                     setHistory(parsed.history || []);
-                    setTurnHistory(parsed.turnHistory || []);
                     setAppTax(parsed.appTax || '20');
                     setKmLitro(parsed.kmLitro || '10');
                     setGasPrice(parsed.gasPrice || '5.80');
@@ -74,14 +70,13 @@
             }, []);
 
             useEffect(() => {
-                localStorage.setItem('@entregador_pro_vFinal_gas', JSON.stringify({ history, turnHistory, appTax, kmLitro, gasPrice }));
-            }, [history, turnHistory, appTax, kmLitro, gasPrice]);
+                localStorage.setItem('@entregador_vFinal_search', JSON.stringify({ history, appTax, kmLitro, gasPrice }));
+            }, [history, appTax, kmLitro, gasPrice]);
 
             const fuelCostKm = parseFloat(gasPrice) / parseFloat(kmLitro);
-            
             const currentPriceAfterTax = modoTaxa === 'BRUTO' ? parseFloat(price) * ((100 - appTax)/100) : parseFloat(price);
-            const currentFuelGasto = (parseFloat(km) * fuelCostKm) || 0;
-            const currentNet = (currentPriceAfterTax - currentFuelGasto) || 0;
+            const currentFuel = (parseFloat(km) * fuelCostKm) || 0;
+            const currentNet = (currentPriceAfterTax - currentFuel) || 0;
             const currentRate = (currentPriceAfterTax / parseFloat(km)) || 0;
 
             const getQuality = (rate) => {
@@ -91,17 +86,16 @@
             };
 
             const addRide = () => {
-                const ride = { 
-                    id: Date.now(), 
-                    grossDisplay: modoTaxa === 'BRUTO' ? parseFloat(price) : parseFloat(price) / ((100 - appTax)/100),
-                    received: currentPriceAfterTax,
-                    fuelGasto: currentFuelGasto,
-                    net: currentNet, 
-                    km: parseFloat(km), 
-                    rate: currentRate, 
-                    type: 'CORRIDA', 
-                    date: new Date().toLocaleDateString(), 
-                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) 
+                if (!price || !km) return;
+                const ride = {
+                    id: Date.now(),
+                    net: currentNet,
+                    fuel: currentFuel,
+                    km: parseFloat(km),
+                    rate: currentRate,
+                    type: 'CORRIDA',
+                    date: new Date().toLocaleDateString(),
+                    time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
                 };
                 setHistory([ride, ...history]);
                 setPrice(''); setKm('');
@@ -110,66 +104,74 @@
             const finishTurn = () => {
                 const lastMarkerIndex = history.findIndex(h => h.type === 'MARKER');
                 const itemsThisTurn = lastMarkerIndex === -1 ? history : history.slice(0, lastMarkerIndex);
-                
-                if (itemsThisTurn.length === 0) return alert("Nada para finalizar.");
+                if (itemsThisTurn.length === 0) return alert("Sem dados.");
 
                 const kmTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.km || 0), 0);
-                const fuelTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.fuelGasto || 0), 0);
+                const fuelTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.fuel || 0), 0);
                 const netTotal = itemsThisTurn.reduce((acc, curr) => acc + curr.net, 0);
-                const grossTotal = itemsThisTurn.reduce((acc, curr) => acc + (curr.grossDisplay || 0), 0);
 
-                const summary = { id: Date.now(), date: new Date().toLocaleDateString(), time: new Date().toLocaleTimeString(), km: kmTotal, fuel: fuelTotal, net: netTotal, gross: grossTotal };
-                
+                const summary = { id: Date.now(), km: kmTotal, fuel: fuelTotal, net: netTotal, time: new Date().toLocaleTimeString() };
                 setLastSummary(summary);
-                setTurnHistory([summary, ...turnHistory]);
-                setHistory([{ id: Date.now(), type: 'MARKER', label: 'TURNO FINALIZADO', time: summary.time, net: 0 }, ...history]);
+                setHistory([{ id: Date.now(), type: 'MARKER', label: 'FECHAMENTO', time: summary.time, net: 0 }, ...history]);
                 setShowModal(true);
             };
+
+            const filteredHistory = history.filter(item => 
+                item.type === 'MARKER' || 
+                item.date.includes(searchTerm) || 
+                item.time.includes(searchTerm)
+            );
 
             return (
                 <div>
                     <div className="header">ENTREGADOR PRO</div>
                     
                     <div className="content">
-                        {tab === 'CALC' && (
+                        {tab === 'LANÇAR' && (
                             <div>
                                 <div className="card">
-                                    <div className="card-title">Como vai lançar?</div>
                                     <div className="tax-selector">
-                                        <div className={`tax-opt ${modoTaxa === 'BRUTO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('BRUTO')}>VALOR NO APP (BRUTO)</div>
-                                        <div className={`tax-opt ${modoTaxa === 'LÍQUIDO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('LÍQUIDO')}>VALOR NA CONTA (LÍQUIDO)</div>
+                                        <div className={`tax-opt ${modoTaxa === 'BRUTO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('BRUTO')}>BRUTO (App)</div>
+                                        <div className={`tax-opt ${modoTaxa === 'LÍQUIDO' ? 'tax-active' : ''}`} onClick={() => setModoTaxa('LÍQUIDO')}>LÍQUIDO (Conta)</div>
                                     </div>
-
-                                    <input className="input" type="number" placeholder="Valor (R$)" value={price} onChange={e => setPrice(e.target.value)} />
-                                    <input className="input" type="number" placeholder="Distância (KM)" value={km} onChange={e => setKm(e.target.value)} />
+                                    <input className="input" type="number" placeholder="Valor R$" value={price} onChange={e => setPrice(e.target.value)} />
+                                    <input className="input" type="number" placeholder="Distância KM" value={km} onChange={e => setKm(e.target.value)} />
                                     
                                     {currentRate > 0 && (
-                                        <div className="status-box" style={{ borderColor: getQuality(currentRate).color }}>
-                                            <span style={{color: getQuality(currentRate).color}}>ESTA CORRIDA É {getQuality(currentRate).label}</span>
-                                            <br/><small>Gasto Gas: R$ {currentFuelGasto.toFixed(2)} | Sobra: R$ {currentNet.toFixed(2)}</small>
+                                        <div style={{ textAlign: 'center', margin: '15px 0', padding: '10px', borderRadius: '12px', border: `2px solid ${getQuality(currentRate).color}` }}>
+                                            <b style={{ color: getQuality(currentRate).color }}>{getQuality(currentRate).label}</b><br/>
+                                            <small>Líquido: R$ {currentNet.toFixed(2)}</small>
                                         </div>
                                     )}
-                                    {parseFloat(price) > 0 && <button className="btn btn-success" onClick={addRide}>LANÇAR AGORA</button>}
+                                    <button className="btn btn-success" onClick={addRide}>SALVAR CORRIDA</button>
                                 </div>
-                                <button className="btn btn-primary" style={{background: '#2c3e50', color: 'white'}} onClick={finishTurn}>🏁 FINALIZAR DIA E VER RESUMO</button>
+                                <button className="btn btn-primary" onClick={finishTurn}>🏁 FINALIZAR TURNO</button>
                             </div>
                         )}
 
                         {tab === 'HISTÓRICO' && (
                             <div>
-                                <div className="card" style={{background: '#2c3e50', color: 'white', textAlign: 'center'}}>
-                                    <small style={{color:'#bdc3c7'}}>LUCRO REAL TOTAL (DESCONTADO GASOLINA)</small><br/>
-                                    <b style={{color: 'var(--success)', fontSize: '28px'}}>R$ {history.reduce((acc, curr) => acc + curr.net, 0).toFixed(2)}</b>
+                                <input className="input search-box" placeholder="🔍 Buscar por data ou hora..." value={searchTerm} onChange={e => setSearchTerm(e.target.value)} />
+                                
+                                <div className="card" style={{ background: '#2c3e50', color: 'white', textAlign: 'center' }}>
+                                    <small>LUCRO LÍQUIDO TOTAL</small><br/>
+                                    <b style={{ fontSize: '28px', color: '#2ecc71' }}>R$ {history.reduce((acc, c) => acc + c.net, 0).toFixed(2)}</b>
+                                    <div style={{ marginTop: '10px', borderTop: '1px solid #3e5871', paddingTop: '10px' }}>
+                                        <small>GASOLINA TOTAL GASTA: </small>
+                                        <b style={{ color: '#ff7675' }}>R$ {history.reduce((acc, c) => acc + (c.fuel || 0), 0).toFixed(2)}</b>
+                                    </div>
                                 </div>
-                                {history.map(item => (
-                                    item.type === 'MARKER' ? <div key={item.id} className="finish-divider">─── {item.label} às {item.time} ───</div> :
-                                    <div key={item.id} className="history-item" style={{borderLeftColor: getQuality(item.rate).color}}>
-                                        <div style={{flex:1}}>
-                                            <small>{item.time} - {item.km} KM</small><br/>
-                                            <small style={{color: 'var(--danger)'}}>Gas: -R$ {item.fuelGasto.toFixed(2)}</small>
+
+                                {filteredHistory.map(item => (
+                                    item.type === 'MARKER' ? <div key={item.id} className="finish-divider">─── {item.label} ÀS {item.time} ───</div> :
+                                    <div key={item.id} className="history-item" style={{ borderLeftColor: getQuality(item.rate).color }}>
+                                        <div>
+                                            <small>{item.date} {item.time}</small><br/>
+                                            <b>{item.km} KM</b><br/>
+                                            <span className="fuel-badge">Gasolina: R$ {item.fuel.toFixed(2)}</span>
                                         </div>
-                                        <div style={{textAlign:'right'}}>
-                                            <b style={{color: 'var(--success)'}}>+ R$ {item.net.toFixed(2)}</b><br/>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <b style={{ color: 'var(--success)' }}>R$ {item.net.toFixed(2)}</b><br/>
                                             <small>{item.rate.toFixed(2)}/km</small>
                                         </div>
                                     </div>
@@ -177,39 +179,39 @@
                             </div>
                         )}
 
-                        {tab === 'CONFIG' && (
+                        {tab === 'AJUSTES' && (
                             <div className="card">
-                                <div className="card-title">Ajustes de Cálculo</div>
-                                <label>Taxa da Lalamove (%)</label>
+                                <label style={{fontSize: '11px', fontWeight: 'bold', color: '#7f8c8d'}}>TAXA APP (%)</label>
                                 <input className="input" type="number" value={appTax} onChange={e => setAppTax(e.target.value)} />
-                                <div style={{display:'flex', gap:'10px'}}>
-                                    <div style={{flex:1}}><label>KM/L</label><input className="input" type="number" value={kmLitro} onChange={e => setKmLitro(e.target.value)} /></div>
-                                    <div style={{flex:1}}><label>Gasolina (R$)</label><input className="input" type="number" value={gasPrice} onChange={e => setGasPrice(e.target.value)} /></div>
-                                </div>
-                                <button className="btn btn-danger" style={{marginTop: 20}} onClick={() => confirm("Apagar tudo?") && (setHistory([]), setTurnHistory([]))}>LIMPAR DADOS</button>
+                                <label style={{fontSize: '11px', fontWeight: 'bold', color: '#7f8c8d'}}>KM/L</label>
+                                <input className="input" type="number" value={kmLitro} onChange={e => setKmLitro(e.target.value)} />
+                                <label style={{fontSize: '11px', fontWeight: 'bold', color: '#7f8c8d'}}>GASOLINA R$</label>
+                                <input className="input" type="number" value={gasPrice} onChange={e => setGasPrice(e.target.value)} />
+                                <button className="btn btn-danger" style={{background: '#e74c3c', color: 'white'}} onClick={() => confirm('Apagar tudo?') && setHistory([])}>LIMPAR TUDO</button>
                             </div>
                         )}
                     </div>
 
                     {showModal && lastSummary && (
-                        <div className="modal">
-                            <div className="modal-content">
-                                <h2 style={{color: 'var(--primary)', margin: '0 0 10px'}}>Dia Finalizado!</h2>
-                                <div style={{textAlign: 'left', background: '#f8f9fa', padding: '15px', borderRadius: '15px', margin: '15px 0'}}>
-                                    <p>Total Rodado: <b>{lastSummary.km} KM</b></p>
-                                    <p>Gasto Gasolina: <b style={{color: 'var(--danger)'}}>R$ {lastSummary.fuel.toFixed(2)}</b></p>
-                                    <hr style={{opacity: 0.1}}/>
-                                    <p style={{fontSize: '18px'}}>LUCRO NO BOLSO:<br/><b style={{color: 'var(--success)', fontSize: '26px'}}>R$ {lastSummary.net.toFixed(2)}</b></p>
+                        <div className="modal" onClick={() => setShowModal(false)}>
+                            <div className="modal-content" onClick={e => e.stopPropagation()}>
+                                <h2 style={{ color: 'var(--primary)', marginBottom: '5px' }}>Resumo do Turno</h2>
+                                <p style={{ fontSize: '12px', color: '#7f8c8d' }}>{new Date().toLocaleDateString()} às {lastSummary.time}</p>
+                                <div style={{ background: '#f8f9fa', padding: '20px', borderRadius: '20px', margin: '20px 0', textAlign: 'left' }}>
+                                    <p>🛣️ KM Rodados: <b>{lastSummary.km.toFixed(1)} km</b></p>
+                                    <p>⛽ Gasto Gasolina: <b style={{ color: 'var(--danger)' }}>R$ {lastSummary.fuel.toFixed(2)}</b></p>
+                                    <hr style={{ opacity: 0.1 }}/>
+                                    <p style={{ fontSize: '18px' }}>💰 LUCRO LÍQUIDO:<br/><b style={{ color: 'var(--success)', fontSize: '28px' }}>R$ {lastSummary.net.toFixed(2)}</b></p>
                                 </div>
-                                <button className="btn btn-success" onClick={() => setShowModal(false)}>CONCLUIR</button>
+                                <button className="btn btn-success" onClick={() => setShowModal(false)}>FECHAR</button>
                             </div>
                         </div>
                     )}
 
                     <nav className="tab-bar">
-                        <button className={`tab-item ${tab === 'CALC' ? 'tab-active' : ''}`} onClick={() => setTab('CALC')}>LANÇAR</button>
+                        <button className={`tab-item ${tab === 'LANÇAR' ? 'tab-active' : ''}`} onClick={() => setTab('LANÇAR')}>LANÇAR</button>
                         <button className={`tab-item ${tab === 'HISTÓRICO' ? 'tab-active' : ''}`} onClick={() => setTab('HISTÓRICO')}>HISTÓRICO</button>
-                        <button className={`tab-item ${tab === 'CONFIG' ? 'tab-active' : ''}`} onClick={() => setTab('CONFIG')}>AJUSTES</button>
+                        <button className={`tab-item ${tab === 'AJUSTES' ? 'tab-active' : ''}`} onClick={() => setTab('AJUSTES')}>AJUSTES</button>
                     </nav>
                 </div>
             );
